@@ -1,5 +1,5 @@
 /**
- * @file ip4.h
+ * @file ipv4.h
  * @author Daniel Uhricek (xuhric00@fit.vutbr.cz)
  * @brief IP protocol related.
  * @version 0.1
