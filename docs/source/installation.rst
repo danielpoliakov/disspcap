@@ -5,7 +5,7 @@ Build and install
 Install build requirements
 **************************
 
-..code:: bash
+.. code:: bash
 
     $ sudo apt-get install libpcap-dev
 
