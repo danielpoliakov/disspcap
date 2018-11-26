@@ -2,6 +2,14 @@
 Build and install
 =================
 
+Install build requirements
+**************************
+
+..code:: bash
+
+    $ sudo apt-get install libpcap-dev
+
+
 C++ shared library
 ******************
 

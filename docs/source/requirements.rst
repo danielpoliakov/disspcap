@@ -10,7 +10,8 @@ Requirements
 Build depedencies
 *****************
 
-* A C++ compiler supporting c++11.
+* C++ compiler supporting c++11
+* libpcap-dev package
 
 Python depedencies
 ******************
