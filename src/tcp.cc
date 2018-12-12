@@ -6,6 +6,10 @@
  * @date 2018-11-02
  * 
  * @copyright Copyright (c) 2018
+ * 
+ * Based on:
+ * https://tools.ietf.org/html/rfc793
+ * https://tools.ietf.org/html/rfc3168
  */
 
 #include "tcp.h"
@@ -98,6 +102,104 @@ unsigned int TCP::data_offset() const
 }
 
 /**
+ * @brief Getter of FLAGS value.
+ * 
+ * @return unsigned int bit array from TCP header.
+ */
+unsigned int TCP::flags() const
+{
+    return this->flags_;
+}
+
+/**
+ * @brief Congestion Window Reduced flag.
+ * 
+ * @return true Flag set.
+ * @return false Flag not set.
+ */
+bool TCP::cwr() const
+{
+    return this->flags_ >> 7;
+}
+
+/**
+ * @brief ECN-Echo flag.
+ * 
+ * @return true Flag set.
+ * @return false Flag not set.
+ */
+bool TCP::ece() const
+{
+    return (this->flags_ >> 6) & 1;
+}
+
+/**
+ * @brief Urgent flag.
+ * 
+ * @return true Flag set.
+ * @return false Flag not set.
+ */
+bool TCP::urg() const
+{
+    return (this->flags_ >> 5) & 1;
+}
+
+/**
+ * @brief Acknowledgement flag.
+ * 
+ * @return true Flag set.
+ * @return false Flag not set.
+ */
+bool TCP::ack() const
+{
+    return (this->flags_ >> 4) & 1;
+}
+
+/**
+ * @brief Push flag.
+ * 
+ * @return true Flag set.
+ * @return false Flag not set.
+ */
+bool TCP::psh() const
+{
+    return (this->flags_ >> 3) & 1;
+}
+
+/**
+ * @brief Reset flag.
+ * 
+ * @return true Flag set.
+ * @return false Flag not set.
+ */
+bool TCP::rst() const
+{
+    return (this->flags_ >> 2) & 1;
+}
+
+/**
+ * @brief Syn flag.
+ * 
+ * @return true Flag set.
+ * @return false Flag not set.
+ */
+bool TCP::syn() const
+{
+    return (this->flags_ >> 1) & 1;
+}
+
+/**
+ * @brief Fin flag.
+ * 
+ * @return true Flag set.
+ * @return false Flag not set.
+ */
+bool TCP::fin() const
+{
+    return this->flags_ & 1;
+}
+
+/**
  * @brief Getter of payload.
  * 
  * @return const uint8_t* Pointer to first byte of payload.
@@ -118,6 +220,8 @@ void TCP::parse()
     this->ack_number_       = ntohl(this->raw_header_->acknowledgment_number);
     this->checksum_         = ntohs(this->raw_header_->checksum);
     this->urgent_pointer_   = 42; /* TODO */
+
+    this->flags_ = this->raw_header_->control_bits;
 
     this->data_offset_ = this->raw_header_->data_offset__reserved >> 4;
     this->payload_     = reinterpret_cast<uint8_t*>(this->raw_header_) + (this->data_offset_ * 4);

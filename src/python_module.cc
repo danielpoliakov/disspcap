@@ -11,6 +11,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
+#include "common.h"
 #include "dns.h"
 #include "ethernet.h"
 #include "ipv4.h"
@@ -35,6 +36,8 @@ PYBIND11_MODULE(disspcap, m)
         .. autosummary::
            :toctree: _generate
     )doc";
+
+    m.def("most_common_ip", &most_common_ip, "Returns most common ip in pcap.");
 
     py::class_<DNS>(m, "DNS")
         .def_property_readonly("qr", &DNS::qr)
@@ -73,7 +76,16 @@ PYBIND11_MODULE(disspcap, m)
         .def_property_readonly("seq_number", &TCP::seq_number)
         .def_property_readonly("ack_number", &TCP::ack_number)
         .def_property_readonly("checksum", &TCP::checksum)
-        .def_property_readonly("urgent_pointer", &TCP::urgent_pointer);
+        .def_property_readonly("urgent_pointer", &TCP::urgent_pointer)
+        .def_property_readonly("flags", &TCP::flags)
+        .def_property_readonly("cwr", &TCP::cwr)
+        .def_property_readonly("ece", &TCP::ece)
+        .def_property_readonly("urg", &TCP::urg)
+        .def_property_readonly("ack", &TCP::ack)
+        .def_property_readonly("psh", &TCP::psh)
+        .def_property_readonly("rst", &TCP::rst)
+        .def_property_readonly("syn", &TCP::syn)
+        .def_property_readonly("fin", &TCP::fin);
 
     py::class_<Packet>(m, "Packet")
         .def_property_readonly("ethernet", &Packet::ethernet)

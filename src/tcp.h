@@ -6,6 +6,10 @@
  * @date 2018-11-02
  * 
  * @copyright Copyright (c) 2018
+ * 
+ * Based on:
+ * https://tools.ietf.org/html/rfc793
+ * https://tools.ietf.org/html/rfc3168
  */
 
 #ifndef DISSPCAP_TCP_H_
@@ -25,7 +29,7 @@ struct tcp_header {
     uint32_t sequence_number;
     uint32_t acknowledgment_number;
     uint8_t data_offset__reserved;
-    uint8_t reserved__control_bits;
+    uint8_t control_bits;
     uint16_t window;
     uint16_t checksum;
     uint16_t urgent_pointer;
@@ -44,6 +48,15 @@ public:
     unsigned int checksum() const;
     unsigned int urgent_pointer() const;
     unsigned int data_offset() const;
+    unsigned int flags() const;
+    bool cwr() const;
+    bool ece() const;
+    bool urg() const;
+    bool ack() const;
+    bool psh() const;
+    bool rst() const;
+    bool syn() const;
+    bool fin() const;
     uint8_t* payload();
 
 private:
@@ -54,6 +67,7 @@ private:
     unsigned int checksum_;
     unsigned int urgent_pointer_;
     unsigned int data_offset_;
+    unsigned int flags_;
     uint8_t* payload_;
     struct tcp_header* raw_header_;
     void parse();

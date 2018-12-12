@@ -8,7 +8,7 @@ import subprocess
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 with open("README.rst", "r") as fh:
     long_description = fh.read()
@@ -48,6 +48,7 @@ ext_modules = [
             'src/tcp.cc',
             'src/udp.cc',
             'src/dns.cc',
+            'src/common.cc'
         ],
         include_dirs=[
             # Path to pybind11 headers
