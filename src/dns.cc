@@ -85,6 +85,16 @@ unsigned int DNS::additional_count() const
 }
 
 /**
+ * @brief Getter of questions.
+ * 
+ * @return const std::vector<std::string>& Parsed questions.
+ */
+const std::vector<std::string>& DNS::questions() const
+{
+    return this->questions_;
+}
+
+/**
  * @brief Getter of answers.
  * 
  * @return const std::vector<std::string>& Parsed answers.
@@ -125,16 +135,12 @@ void DNS::parse()
 
     /* header */
     this->qr_               = this->raw_header_->qr__opcode__aa__tc__rd__ra >> 7;
-    this->answer_count_     = ntohs(this->raw_header_->ancount);
     this->question_count_   = ntohs(this->raw_header_->qdcount);
+    this->answer_count_     = ntohs(this->raw_header_->ancount);
     this->authority_count_  = ntohs(this->raw_header_->nscount);
     this->additional_count_ = ntohs(this->raw_header_->arcount);
 
-    /* parse only responses*/
-    if (!this->qr_)
-        return;
-
-    /* skip questions entries */
+    /* skip header */
     ptr_ = base_ptr_ + DNS_HDR_LEN;
     remaining_length_ -= DNS_HDR_LEN;
 
@@ -142,17 +148,15 @@ void DNS::parse()
     if (remaining_length_ <= 0)
         return;
 
+    /* parse questions */
     for (unsigned int i = 0; i < this->question_count_; ++i) {
-        while (*ptr_ != 0) {
-            ++ptr_;
-            /* malform packet check */
-            if (--remaining_length_ == 0) {
-                return;
-            }
-        }
+        std::string ans = this->parse_name();
 
-        ptr_ += 5;
-        remaining_length_ -= 5;
+        struct dns_question* question = reinterpret_cast<dns_question*>(ptr_);
+        ans += " " + this->parse_type(ntohs(question->type));
+        ptr_ += sizeof(struct dns_question);
+
+        this->questions_.push_back(ans);
     }
 
     /* parse answers */
@@ -417,6 +421,11 @@ std::string DNS::parse_rdata(uint16_t type, uint16_t length)
 
         ptr_ = bkup + length;
 
+        return data;
+
+    case 12:
+        /* PTR */
+        data = this->parse_name(); /* ptrdname */
         return data;
 
     case 15:

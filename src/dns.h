@@ -36,6 +36,14 @@ struct dns_header {
 } __attribute__((packed));
 
 /**
+ * @brief DNS question struct.
+ */
+struct dns_question {
+    uint16_t type;
+    uint16_t rr_class;
+} __attribute__((packed));
+
+/**
  * @brief DNS resource record struct.
  */
 struct dns_rr {
@@ -98,6 +106,7 @@ public:
     unsigned int answer_count() const;
     unsigned int authority_count() const;
     unsigned int additional_count() const;
+    const std::vector<std::string>& questions() const;
     const std::vector<std::string>& answers() const;
     const std::vector<std::string>& authoritatives() const;
     const std::vector<std::string>& additionals() const;
@@ -112,6 +121,7 @@ private:
     int remaining_length_;
     uint8_t* ptr_;
     uint8_t* base_ptr_;
+    std::vector<std::string> questions_;
     std::vector<std::string> answers_;
     std::vector<std::string> authoritatives_;
     std::vector<std::string> additionals_;

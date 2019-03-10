@@ -45,6 +45,7 @@ PYBIND11_MODULE(disspcap, m)
         .def_property_readonly("answer_count", &DNS::answer_count)
         .def_property_readonly("authority_count", &DNS::authority_count)
         .def_property_readonly("additional_count", &DNS::additional_count)
+        .def_property_readonly("questions", &DNS::questions)
         .def_property_readonly("answers", &DNS::answers)
         .def_property_readonly("authoritatives", &DNS::authoritatives)
         .def_property_readonly("additionals", &DNS::additionals);
