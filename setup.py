@@ -48,6 +48,7 @@ ext_modules = [
             'src/tcp.cc',
             'src/udp.cc',
             'src/dns.cc',
+            'src/http.cc',
             'src/common.cc'
         ],
         include_dirs=[

@@ -29,6 +29,7 @@ Packet::Packet(uint8_t* data, unsigned int length)
     , udp_{ nullptr }
     , tcp_{ nullptr }
     , dns_{ nullptr }
+    , http_{ nullptr }
 {
     if (!data) {
         return;
@@ -61,6 +62,9 @@ Packet::~Packet()
 
     if (this->dns_)
         delete this->dns_;
+
+    if (this->http_)
+        delete this->http_;
 }
 
 /**
@@ -153,9 +157,24 @@ const TCP* Packet::tcp() const
     return this->tcp_;
 }
 
+/**
+ * @brief Getter of DNS data.
+ * 
+ * @return const DNS* DNS object.
+ */
 const DNS* Packet::dns() const
 {
     return this->dns_;
+}
+
+/**
+ * @brief Getter of HTTP data.
+ * 
+ * @return const HTTP* HTTP object.
+ */
+const HTTP* Packet::http() const
+{
+    return this->http_;
 }
 
 /**
@@ -204,6 +223,7 @@ void Packet::parse()
 
     if (this->udp_) {
         if (this->udp_->source_port() == 53 || this->udp_->destination_port() == 53) {
+            /* DNS */
             this->dns_ = new DNS(this->payload_, this->payload_length_);
         }
     }
@@ -217,6 +237,11 @@ void Packet::parse()
             if (dns_length <= this->payload_length_) {
                 this->dns_ = new DNS(this->payload_ + 2, this->payload_length_ - 2);
             }
+        }
+
+        if (this->tcp_->source_port() == 80 || this->tcp_->destination_port() == 80) {
+            /* HTTP */
+            this->http_ = new HTTP(this->payload_, this->payload_length_);
         }
     }
 }

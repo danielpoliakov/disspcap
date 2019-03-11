@@ -17,6 +17,7 @@
 
 #include "dns.h"
 #include "ethernet.h"
+#include "http.h"
 #include "ipv4.h"
 #include "ipv6.h"
 #include "tcp.h"
@@ -39,6 +40,7 @@ public:
     const UDP* udp() const;
     const TCP* tcp() const;
     const DNS* dns() const;
+    const HTTP* http() const;
     uint8_t* raw_data();
     uint8_t* payload();
 
@@ -53,6 +55,7 @@ private:
     UDP* udp_;
     TCP* tcp_;
     DNS* dns_;
+    HTTP* http_;
     void parse();
 };
 }

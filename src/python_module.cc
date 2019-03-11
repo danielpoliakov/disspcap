@@ -14,6 +14,7 @@
 #include "common.h"
 #include "dns.h"
 #include "ethernet.h"
+#include "http.h"
 #include "ipv4.h"
 #include "ipv6.h"
 #include "packet.h"
@@ -38,6 +39,24 @@ PYBIND11_MODULE(disspcap, m)
     )doc";
 
     m.def("most_common_ip", &most_common_ip, "Returns most common ip in pcap.");
+
+    py::class_<HTTP>(m, "HTTP")
+        .def_property_readonly("is_request", &HTTP::is_request)
+        .def_property_readonly("is_response", &HTTP::is_response)
+        .def_property_readonly("request_method", &HTTP::request_method)
+        .def_property_readonly("request_uri", &HTTP::request_uri)
+        .def_property_readonly("http_version", &HTTP::http_version)
+        .def_property_readonly("response_phrase", &HTTP::response_phrase)
+        .def_property_readonly("status_code", &HTTP::status_code)
+        .def_property_readonly("headers", &HTTP::headers)
+        .def_property_readonly("body_length", &HTTP::body_length)
+        .def_property_readonly("body", [](HTTP& http) {
+            uint8_t* bytes = http.body();
+            if (bytes == nullptr) {
+                return py::bytes("");
+            }
+            return py::bytes((char*)bytes, http.body_length());
+        });
 
     py::class_<DNS>(m, "DNS")
         .def_property_readonly("qr", &DNS::qr)
@@ -95,9 +114,14 @@ PYBIND11_MODULE(disspcap, m)
         .def_property_readonly("udp", &Packet::udp)
         .def_property_readonly("tcp", &Packet::tcp)
         .def_property_readonly("dns", &Packet::dns)
+        .def_property_readonly("http", &Packet::http)
         .def_property_readonly("payload_length", &Packet::payload_length)
         .def_property_readonly("payload", [](Packet& packet) {
             uint8_t* bytes = packet.payload();
+            if (bytes == nullptr) {
+                return py::bytes("");
+            }
+
             return py::bytes((char*)bytes, packet.payload_length());
         });
 
