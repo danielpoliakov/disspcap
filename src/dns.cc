@@ -25,6 +25,7 @@ namespace disspcap {
  * @brief Construct a new DNS::DNS object and runs parser.
  * 
  * @param data Packets data (starting w/ DNS).
+ * @param data_length Data length.
  */
 DNS::DNS(uint8_t* data, int data_length)
     : raw_header_{ reinterpret_cast<dns_header*>(data) }
