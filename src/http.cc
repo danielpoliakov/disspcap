@@ -15,6 +15,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cstring>
 #include <iterator>
 
 namespace disspcap {
@@ -35,6 +36,16 @@ HTTP::HTTP(uint8_t* data, int data_length)
         return;
 
     this->parse();
+}
+
+/**
+ * @brief Destroy the HTTP::HTTP object.
+ */
+HTTP::~HTTP()
+{
+    if (this->body_) {
+        delete[] this->body_;
+    }
 }
 
 /**
@@ -162,8 +173,11 @@ void HTTP::parse()
         this->status_code_     = this->next_string();
         this->response_phrase_ = this->next_line();
         this->parse_headers();
-        this->body_        = this->ptr_;
         this->body_length_ = this->end_ptr_ - this->ptr_;
+
+        /* allocate and load body */
+        this->body_ = new uint8_t[this->body_length_];
+        std::memcpy(this->body_, this->ptr_, this->body_length_);
 
     } else {
         /* request */
@@ -171,8 +185,11 @@ void HTTP::parse()
         this->req_uri_  = this->next_string();
         this->protocol_ = this->next_line();
         this->parse_headers();
-        this->body_        = this->ptr_;
         this->body_length_ = this->end_ptr_ - this->ptr_;
+
+        /* allocate and load body */
+        this->body_ = new uint8_t[this->body_length_];
+        std::memcpy(this->body_, this->ptr_, this->body_length_);
     }
 }
 

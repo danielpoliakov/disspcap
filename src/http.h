@@ -42,6 +42,7 @@ const std::vector<std::string> PROTO_VERSIONS = {
 class HTTP {
 public:
     HTTP(uint8_t* data, int data_length);
+    ~HTTP();
     bool is_request() const;
     bool is_response() const;
     const std::string& request_method() const;

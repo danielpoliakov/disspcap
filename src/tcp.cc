@@ -15,6 +15,7 @@
 #include "tcp.h"
 
 #include <arpa/inet.h>
+#include <cstring>
 
 namespace disspcap {
 
@@ -23,10 +24,23 @@ namespace disspcap {
  * 
  * @param data Packets data (starting w/ TCP).
  */
-TCP::TCP(uint8_t* data)
-    : raw_header_{ reinterpret_cast<tcp_header*>(data) }
+TCP::TCP(uint8_t* data, unsigned int data_length)
+    : base_ptr_{ data }
+    , raw_header_{ reinterpret_cast<tcp_header*>(data) }
+    , data_length_{ data_length }
+    , payload_{ nullptr }
 {
     this->parse();
+}
+
+/**
+ * @brief Destroy the TCP::TCP object.
+ */
+TCP::~TCP()
+{
+    if (this->payload_) {
+        delete[] this->payload_;
+    }
 }
 
 /**
@@ -210,6 +224,16 @@ uint8_t* TCP::payload()
 }
 
 /**
+ * @brief Getter of payload length value.
+ * 
+ * @return unsigned int Length of payload.
+ */
+unsigned int TCP::payload_length() const
+{
+    return this->payload_length_;
+}
+
+/**
  * @brief Parses TCP header.
  */
 void TCP::parse()
@@ -223,7 +247,11 @@ void TCP::parse()
 
     this->flags_ = this->raw_header_->control_bits;
 
-    this->data_offset_ = this->raw_header_->data_offset__reserved >> 4;
-    this->payload_     = reinterpret_cast<uint8_t*>(this->raw_header_) + (this->data_offset_ * 4);
+    /* allocate and load payload */
+    this->data_offset_    = this->raw_header_->data_offset__reserved >> 4;
+    this->payload_length_ = this->data_length_ - this->data_offset_ * 4;
+    this->payload_        = new uint8_t[this->payload_length_];
+    uint8_t* data_ptr     = this->base_ptr_ + this->data_offset_ * 4;
+    std::memcpy(this->payload_, data_ptr, this->payload_length_);
 }
 }

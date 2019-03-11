@@ -37,6 +37,7 @@ struct udp_header {
 class UDP {
 public:
     UDP(uint8_t* data);
+    ~UDP();
     unsigned int source_port() const;
     unsigned int destination_port() const;
     unsigned int length() const;
@@ -50,6 +51,7 @@ private:
     unsigned int length_;
     unsigned int checksum_;
     struct udp_header* raw_header_;
+    uint8_t* base_ptr_;
     uint8_t* payload_;
     void parse();
 };

@@ -40,7 +40,8 @@ struct tcp_header {
  */
 class TCP {
 public:
-    TCP(uint8_t* data);
+    TCP(uint8_t* data, unsigned int data_length);
+    ~TCP();
     unsigned int source_port() const;
     unsigned int destination_port() const;
     unsigned int seq_number() const;
@@ -58,6 +59,7 @@ public:
     bool syn() const;
     bool fin() const;
     uint8_t* payload();
+    unsigned int payload_length() const;
 
 private:
     unsigned int source_port_;
@@ -68,7 +70,10 @@ private:
     unsigned int urgent_pointer_;
     unsigned int data_offset_;
     unsigned int flags_;
+    unsigned int data_length_;
+    unsigned int payload_length_;
     uint8_t* payload_;
+    uint8_t* base_ptr_;
     struct tcp_header* raw_header_;
     void parse();
 };

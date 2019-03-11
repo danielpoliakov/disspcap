@@ -216,7 +216,7 @@ void Packet::parse()
         this->payload_        = this->udp_->payload();
         this->payload_length_ = this->udp_->payload_length();
     } else if (next_header == "TCP") {
-        this->tcp_            = new TCP(this->payload_);
+        this->tcp_            = new TCP(this->payload_, this->payload_length_);
         this->payload_        = this->tcp_->payload();
         this->payload_length_ = this->payload_length_ - this->tcp_->data_offset() * 4;
     }

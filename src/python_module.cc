@@ -88,7 +88,16 @@ PYBIND11_MODULE(disspcap, m)
 
     py::class_<UDP>(m, "UDP")
         .def_property_readonly("source_port", &UDP::source_port)
-        .def_property_readonly("destination_port", &UDP::destination_port);
+        .def_property_readonly("destination_port", &UDP::destination_port)
+        .def_property_readonly("payload_length", &UDP::payload_length)
+        .def_property_readonly("payload", [](UDP& udp) {
+            uint8_t* bytes = udp.payload();
+            if (bytes == nullptr) {
+                return py::bytes("");
+            }
+
+            return py::bytes((char*)bytes, udp.payload_length());
+        });
 
     py::class_<TCP>(m, "TCP")
         .def_property_readonly("source_port", &TCP::source_port)
@@ -105,7 +114,16 @@ PYBIND11_MODULE(disspcap, m)
         .def_property_readonly("psh", &TCP::psh)
         .def_property_readonly("rst", &TCP::rst)
         .def_property_readonly("syn", &TCP::syn)
-        .def_property_readonly("fin", &TCP::fin);
+        .def_property_readonly("fin", &TCP::fin)
+        .def_property_readonly("payload_length", &TCP::payload_length)
+        .def_property_readonly("payload", [](TCP& tcp) {
+            uint8_t* bytes = tcp.payload();
+            if (bytes == nullptr) {
+                return py::bytes("");
+            }
+
+            return py::bytes((char*)bytes, tcp.payload_length());
+        });
 
     py::class_<Packet>(m, "Packet")
         .def_property_readonly("ethernet", &Packet::ethernet)
@@ -114,16 +132,7 @@ PYBIND11_MODULE(disspcap, m)
         .def_property_readonly("udp", &Packet::udp)
         .def_property_readonly("tcp", &Packet::tcp)
         .def_property_readonly("dns", &Packet::dns)
-        .def_property_readonly("http", &Packet::http)
-        .def_property_readonly("payload_length", &Packet::payload_length)
-        .def_property_readonly("payload", [](Packet& packet) {
-            uint8_t* bytes = packet.payload();
-            if (bytes == nullptr) {
-                return py::bytes("");
-            }
-
-            return py::bytes((char*)bytes, packet.payload_length());
-        });
+        .def_property_readonly("http", &Packet::http);
 
     py::class_<Pcap>(m, "Pcap")
         .def(py::init())

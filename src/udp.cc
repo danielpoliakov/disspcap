@@ -14,6 +14,7 @@
 #include "udp.h"
 
 #include <arpa/inet.h>
+#include <cstring>
 
 namespace disspcap {
 
@@ -23,9 +24,20 @@ namespace disspcap {
  * @param data Packets data (starting w/ UDP).
  */
 UDP::UDP(uint8_t* data)
-    : raw_header_{ reinterpret_cast<udp_header*>(data) }
+    : base_ptr_{ data }
+    , raw_header_{ reinterpret_cast<udp_header*>(data) }
 {
     this->parse();
+}
+
+/**
+ * @brief Destroy the UDP::UDP object.
+ */
+UDP::~UDP()
+{
+    if (this->payload_) {
+        delete[] this->payload_;
+    }
 }
 
 /**
@@ -98,7 +110,8 @@ void UDP::parse()
     this->length_           = ntohs(this->raw_header_->length);
     this->checksum_         = ntohs(this->raw_header_->checksum);
 
-    /* set payload */
-    this->payload_ = reinterpret_cast<uint8_t*>(this->raw_header_) + UDP_LEN;
+    /* allocate and load payload */
+    this->payload_ = new uint8_t[this->payload_length()];
+    std::memcpy(this->payload_, this->base_ptr_ + UDP_LEN, this->payload_length());
 }
 }
