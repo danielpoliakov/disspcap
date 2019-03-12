@@ -25,10 +25,10 @@ namespace disspcap {
  * @param data Packets data (starting w/ TCP).
  */
 TCP::TCP(uint8_t* data, unsigned int data_length)
-    : base_ptr_{ data }
-    , raw_header_{ reinterpret_cast<tcp_header*>(data) }
-    , data_length_{ data_length }
+    : data_length_{ data_length }
     , payload_{ nullptr }
+    , base_ptr_{ data }
+    , raw_header_{ reinterpret_cast<tcp_header*>(data) }
 {
     this->parse();
 }

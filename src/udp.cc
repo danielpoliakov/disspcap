@@ -24,8 +24,8 @@ namespace disspcap {
  * @param data Packets data (starting w/ UDP).
  */
 UDP::UDP(uint8_t* data)
-    : base_ptr_{ data }
-    , raw_header_{ reinterpret_cast<udp_header*>(data) }
+    : raw_header_{ reinterpret_cast<udp_header*>(data) }
+    , base_ptr_{ data }
 {
     this->parse();
 }
