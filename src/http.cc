@@ -123,9 +123,9 @@ const std::string& HTTP::status_code() const
 /**
  * @brief Getter of HTTP headers.
  * 
- * @return const std::vector<std::string>& Array of headers.
+ * @return const std::map<std::string, std::string>  Key:Value pairs of headers.
  */
-const std::vector<std::string>& HTTP::headers() const
+const std::map<std::string, std::string> HTTP::headers() const
 {
     return this->headers_;
 }
@@ -285,12 +285,23 @@ std::string HTTP::parse_protocol()
 /**
  * @brief Parses out headers information.
  * 
- * Fills this->headers_ vector.
+ * Fills this->headers_ map.
  */
 void HTTP::parse_headers()
 {
+    std::string key;
+    std::string value;
+    size_t div_index;
+
     for (std::string header = next_line(); header != ""; header = next_line()) {
-        this->headers_.push_back(header);
+        div_index = header.find(':');
+        if (div_index == std::string::npos)
+            break;
+
+        key   = header.substr(0, div_index);
+        value = header.substr(div_index + 2);
+
+        this->headers_.insert(std::make_pair(key, value));
     }
 }
 }

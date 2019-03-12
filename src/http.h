@@ -14,6 +14,7 @@
 #ifndef DISSPCAP_HTTP_H
 #define DISSPCAP_HTTP_H
 
+#include <map>
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -50,7 +51,7 @@ public:
     const std::string& http_version() const;
     const std::string& response_phrase() const;
     const std::string& status_code() const;
-    const std::vector<std::string>& headers() const;
+    const std::map<std::string, std::string> headers() const;
     uint8_t* body();
     unsigned int body_length() const;
 
@@ -60,7 +61,7 @@ private:
     std::string protocol_;
     std::string response_phrase_;
     std::string status_code_;
-    std::vector<std::string> headers_;
+    std::map<std::string, std::string> headers_;
     unsigned int req_res_;
     uint8_t* ptr_;
     uint8_t* base_ptr_;

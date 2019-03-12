@@ -37,3 +37,9 @@ def test_response_phrase():
     assert packets[1].http.response_phrase == 'OK'
     assert packets[10].http.response_phrase == 'Not Found'
     assert packets[37].http.response_phrase == 'No Content'
+
+
+def test_headers():
+    assert packets[0].http.headers['Host'] == 'su.fit.vutbr.cz'
+    assert packets[5].http.headers['Content-Type'] == 'text/css'
+    assert packets[12].http.headers['Server'] == 'Apache/2.4.29 (Ubuntu)'
