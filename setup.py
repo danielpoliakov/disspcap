@@ -8,7 +8,7 @@ import subprocess
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 
 with open("README.rst", "r") as fh:
     long_description = fh.read()
@@ -49,6 +49,7 @@ ext_modules = [
             'src/udp.cc',
             'src/dns.cc',
             'src/http.cc',
+            'src/irc.cc',
             'src/common.cc'
         ],
         include_dirs=[

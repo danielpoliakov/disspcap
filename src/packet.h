@@ -20,6 +20,7 @@
 #include "http.h"
 #include "ipv4.h"
 #include "ipv6.h"
+#include "irc.h"
 #include "tcp.h"
 #include "udp.h"
 
@@ -41,6 +42,7 @@ public:
     const TCP* tcp() const;
     const DNS* dns() const;
     const HTTP* http() const;
+    const IRC* irc() const;
     uint8_t* raw_data();
     uint8_t* payload();
 
@@ -56,6 +58,7 @@ private:
     TCP* tcp_;
     DNS* dns_;
     HTTP* http_;
+    IRC* irc_;
     void parse();
 };
 }

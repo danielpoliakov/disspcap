@@ -17,6 +17,7 @@
 #include "http.h"
 #include "ipv4.h"
 #include "ipv6.h"
+#include "irc.h"
 #include "packet.h"
 #include "pcap.h"
 #include "tcp.h"
@@ -39,6 +40,15 @@ PYBIND11_MODULE(disspcap, m)
     )doc";
 
     m.def("most_common_ip", &most_common_ip, "Returns most common ip in pcap.");
+
+    py::class_<irc_message>(m, "irc_message")
+        .def_readonly("prefix", &irc_message::prefix)
+        .def_readonly("command", &irc_message::command)
+        .def_readonly("params", &irc_message::params)
+        .def_readonly("trailing", &irc_message::trailing);
+
+    py::class_<IRC>(m, "IRC")
+        .def_property_readonly("messages", &IRC::messages);
 
     py::class_<HTTP>(m, "HTTP")
         .def_property_readonly("is_request", &HTTP::is_request)
@@ -132,7 +142,8 @@ PYBIND11_MODULE(disspcap, m)
         .def_property_readonly("udp", &Packet::udp)
         .def_property_readonly("tcp", &Packet::tcp)
         .def_property_readonly("dns", &Packet::dns)
-        .def_property_readonly("http", &Packet::http);
+        .def_property_readonly("http", &Packet::http)
+        .def_property_readonly("irc", &Packet::irc);
 
     py::class_<Pcap>(m, "Pcap")
         .def(py::init())

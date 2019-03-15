@@ -30,6 +30,7 @@ Packet::Packet(uint8_t* data, unsigned int length)
     , tcp_{ nullptr }
     , dns_{ nullptr }
     , http_{ nullptr }
+    , irc_{ nullptr }
 {
     if (!data) {
         return;
@@ -65,6 +66,9 @@ Packet::~Packet()
 
     if (this->http_)
         delete this->http_;
+
+    if (this->irc_)
+        delete this->irc_;
 }
 
 /**
@@ -178,6 +182,16 @@ const HTTP* Packet::http() const
 }
 
 /**
+ * @brief Getter of IRC data.
+ * 
+ * @return const IRC* IRC object.
+ */
+const IRC* Packet::irc() const
+{
+    return this->irc_;
+}
+
+/**
  * @brief Parses raw data into protocol headers.
  */
 void Packet::parse()
@@ -230,6 +244,7 @@ void Packet::parse()
 
     if (this->tcp_) {
         if (this->tcp_->source_port() == 53 || this->tcp_->destination_port() == 53) {
+            /* DNS */
             uint16_t dns_length = this->payload_[0];
             dns_length <<= 8;
             dns_length += this->payload_[1];
@@ -242,6 +257,11 @@ void Packet::parse()
         if (this->tcp_->source_port() == 80 || this->tcp_->destination_port() == 80) {
             /* HTTP */
             this->http_ = new HTTP(this->payload_, this->payload_length_);
+        }
+
+        if (this->tcp_->source_port() == 6667 || this->tcp_->destination_port() == 6667) {
+            /* IRC */
+            this->irc_ = new IRC(this->payload_, this->payload_length_);
         }
     }
 }
