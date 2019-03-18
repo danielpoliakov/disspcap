@@ -175,6 +175,9 @@ void HTTP::parse()
         this->parse_headers();
         this->body_length_ = this->end_ptr_ - this->ptr_;
 
+        if (this->ptr_ > this->end_ptr_)
+            this->body_length_ = 0;
+
         /* allocate and load body */
         this->body_ = new uint8_t[this->body_length_];
         std::memcpy(this->body_, this->ptr_, this->body_length_);
@@ -186,6 +189,9 @@ void HTTP::parse()
         this->protocol_ = this->next_line();
         this->parse_headers();
         this->body_length_ = this->end_ptr_ - this->ptr_;
+
+        if (this->ptr_ > this->end_ptr_)
+            this->body_length_ = 0;
 
         /* allocate and load body */
         this->body_ = new uint8_t[this->body_length_];
@@ -215,7 +221,10 @@ std::string HTTP::next_string(char limitter)
     std::string str = std::string(reinterpret_cast<const char*>(this->ptr_), len);
 
     /* skip limitter */
-    this->ptr_ = p + 1;
+    if (p < this->end_ptr_)
+        ++p;
+
+    this->ptr_ = p;
 
     return str;
 }
@@ -241,7 +250,10 @@ std::string HTTP::next_line()
     std::string str = std::string(reinterpret_cast<const char*>(this->ptr_), len);
 
     /* skip CRLF */
-    this->ptr_ = p + 2;
+    if (p < this->end_ptr_ - 1)
+        p += 2;
+
+    this->ptr_ = p;
 
     return str;
 }
