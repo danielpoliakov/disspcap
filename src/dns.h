@@ -21,6 +21,7 @@
 namespace disspcap {
 
 const uint8_t DNS_HDR_LEN = 12; /**< DNS header length. */
+const uint8_t DNS_RR_LEN  = 10; /** < DNS resource record header length. */
 
 /**
  * @brief DNS header part struct.
@@ -101,6 +102,7 @@ struct dns_dnskey {
 class DNS {
 public:
     DNS(uint8_t* data, int data_length);
+    bool is_incomplete() const;
     unsigned int qr() const;
     unsigned int question_count() const;
     unsigned int answer_count() const;
@@ -117,10 +119,11 @@ private:
     unsigned int answer_count_;
     unsigned int authority_count_;
     unsigned int additional_count_;
+    bool incomplete_;
     struct dns_header* raw_header_;
-    int remaining_length_;
     uint8_t* ptr_;
     uint8_t* base_ptr_;
+    uint8_t* end_ptr_;
     std::vector<std::string> questions_;
     std::vector<std::string> answers_;
     std::vector<std::string> authoritatives_;

@@ -28,11 +28,24 @@ namespace disspcap {
  * @param data_length Data length.
  */
 DNS::DNS(uint8_t* data, int data_length)
-    : raw_header_{ reinterpret_cast<dns_header*>(data) }
-    , remaining_length_(data_length)
-    , base_ptr_(data)
+    : incomplete_{ false }
+    , raw_header_{ reinterpret_cast<dns_header*>(data) }
+    , ptr_{ data }
+    , base_ptr_{ data }
+    , end_ptr_{ data + data_length }
 {
     this->parse();
+}
+
+/**
+ * @brief Incomplete information packet getter.
+ * 
+ * @return true Incomplete packet.
+ * @return false Complete packet.
+ */
+bool DNS::is_incomplete() const
+{
+    return this->incomplete_;
 }
 
 /**
@@ -130,9 +143,11 @@ const std::vector<std::string>& DNS::additionals() const
  */
 void DNS::parse()
 {
-    /* malform packet check */
-    if (remaining_length_ < DNS_HDR_LEN)
+    /* malform/incomplete packet check */
+    if (end_ptr_ - ptr_ < DNS_HDR_LEN) {
+        this->incomplete_ = true;
         return;
+    }
 
     /* header */
     this->qr_               = this->raw_header_->qr__opcode__aa__tc__rd__ra >> 7;
@@ -143,11 +158,6 @@ void DNS::parse()
 
     /* skip header */
     ptr_ = base_ptr_ + DNS_HDR_LEN;
-    remaining_length_ -= DNS_HDR_LEN;
-
-    /* malform packet check */
-    if (remaining_length_ <= 0)
-        return;
 
     /* parse questions */
     for (unsigned int i = 0; i < this->question_count_; ++i) {
@@ -164,7 +174,18 @@ void DNS::parse()
     for (unsigned int i = 0; i < this->answer_count_; ++i) {
         std::string ans = this->parse_name();
 
+        /* end during name read */
+        if (this->incomplete_) {
+            return;
+        }
+
         struct dns_rr* rr = reinterpret_cast<dns_rr*>(ptr_);
+
+        /* incomplete packet check */
+        if (end_ptr_ - ptr_ < DNS_RR_LEN) {
+            this->incomplete_ = true;
+            return;
+        }
 
         ans += " " + this->parse_type(ntohs(rr->type));
         ptr_ += sizeof(struct dns_rr);
@@ -177,7 +198,18 @@ void DNS::parse()
     for (unsigned int i = 0; i < this->authority_count_; ++i) {
         std::string ans = this->parse_name();
 
+        /* end during name read */
+        if (this->incomplete_) {
+            return;
+        }
+
         struct dns_rr* rr = reinterpret_cast<dns_rr*>(ptr_);
+
+        /* incomplete packet check */
+        if (end_ptr_ - ptr_ < DNS_RR_LEN) {
+            this->incomplete_ = true;
+            return;
+        }
 
         ans += " " + this->parse_type(ntohs(rr->type));
         ptr_ += sizeof(struct dns_rr);
@@ -190,7 +222,18 @@ void DNS::parse()
     for (unsigned int i = 0; i < this->additional_count_; ++i) {
         std::string ans = this->parse_name();
 
+        /* end during name read */
+        if (this->incomplete_) {
+            return;
+        }
+
         struct dns_rr* rr = reinterpret_cast<dns_rr*>(ptr_);
+
+        /* incomplete packet check */
+        if (end_ptr_ - ptr_ < DNS_RR_LEN) {
+            this->incomplete_ = true;
+            return;
+        }
 
         ans += " " + this->parse_type(ntohs(rr->type));
         ptr_ += sizeof(struct dns_rr);
@@ -223,6 +266,11 @@ std::string DNS::parse_name(uint8_t* ptr)
 
     /* name ends w/ 0x00 */
     while (*p) {
+        if (p >= this->end_ptr_) {
+            this->incomplete_ = true;
+            return name;
+        }
+
         len = *p;
 
         if (len < 0xc0) {

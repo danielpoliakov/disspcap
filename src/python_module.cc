@@ -70,6 +70,7 @@ PYBIND11_MODULE(disspcap, m)
 
     py::class_<DNS>(m, "DNS")
         .def_property_readonly("qr", &DNS::qr)
+        .def_property_readonly("is_incomplete", &DNS::is_incomplete)
         .def_property_readonly("question_count", &DNS::question_count)
         .def_property_readonly("answer_count", &DNS::answer_count)
         .def_property_readonly("authority_count", &DNS::authority_count)
