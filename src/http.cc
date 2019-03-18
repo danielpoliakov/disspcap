@@ -211,9 +211,6 @@ std::string HTTP::next_string(char limitter)
     unsigned int len = 0;
 
     while (*p && *p != limitter && p < this->end_ptr_) {
-        if (!isprint(static_cast<int>(*p))) {
-            break;
-        }
         ++p;
         ++len;
     }
