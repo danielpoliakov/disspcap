@@ -20,8 +20,9 @@
 
 namespace disspcap {
 
-const uint8_t DNS_HDR_LEN = 12; /**< DNS header length. */
-const uint8_t DNS_RR_LEN  = 10; /** < DNS resource record header length. */
+const uint8_t DNS_HDR_LEN      = 12; /**< DNS header length. */
+const uint8_t DNS_QUESTION_LEN = 4;  /**< DNS question header length. */
+const uint8_t DNS_RR_LEN       = 10; /**< DNS resource record header length. */
 
 /**
  * @brief DNS header part struct.
