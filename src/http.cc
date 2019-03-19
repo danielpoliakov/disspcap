@@ -318,8 +318,14 @@ void HTTP::parse_headers()
         if (div_index == std::string::npos)
             break;
 
-        key   = header.substr(0, div_index);
-        value = header.substr(div_index + 2);
+        key = header.substr(0, div_index);
+
+        /* empty value check */
+        if (div_index + 2 >= header.length()) {
+            value = "";
+        } else {
+            value = header.substr(div_index + 2);
+        }
 
         /* check printables */
         for (unsigned int i = 0; i < value.length(); ++i) {
