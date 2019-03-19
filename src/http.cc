@@ -71,6 +71,17 @@ bool HTTP::is_response() const
 }
 
 /**
+ * @brief Contains non ascii characters in headers fields.
+ * 
+ * @return true Contains non-ascii.
+ * @return false Does not contain non-ascii
+ */
+bool HTTP::non_ascii() const
+{
+    return this->non_ascii_;
+}
+
+/**
  * @brief Getter of HTTP request method. (GET, POST, ...)
  * 
  * @return const std::string& Request method.
@@ -310,7 +321,35 @@ void HTTP::parse_headers()
         key   = header.substr(0, div_index);
         value = header.substr(div_index + 2);
 
+        /* check printables */
+        for (unsigned int i = 0; i < value.length(); ++i) {
+            unsigned char repr = static_cast<unsigned char>(value[i]);
+
+            if (!isprint(repr)) {
+                /* non printable ascii */
+                this->non_ascii_ = true;
+                value.replace(i, 1, string_hexa(repr));
+            }
+        }
+
         this->headers_.insert(std::make_pair(key, value));
     }
+}
+
+/**
+ * @brief Constructs hexadecimal representation string.
+ * 
+ * @param number Number to represent.
+ * @return std::string String - e.g. "\x98".
+ */
+std::string string_hexa(unsigned char number)
+{
+    const char hex_arr[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+    std::string hexa = "%";
+    hexa += hex_arr[number / 16];
+    hexa += hex_arr[number % 16];
+
+    return hexa;
 }
 }

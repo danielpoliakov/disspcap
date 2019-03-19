@@ -8,7 +8,7 @@ import subprocess
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
-__version__ = '1.0.6'
+__version__ = '1.0.7'
 
 with open("README.rst", "r") as fh:
     long_description = fh.read()

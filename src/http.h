@@ -37,6 +37,8 @@ const std::vector<std::string> PROTO_VERSIONS = {
     "HTTP/2.0", "HTTP/3.0"
 };
 
+std::string string_hexa(unsigned char);
+
 /**
  * @brief HTTP class holding HTTP related information.
  */
@@ -46,6 +48,7 @@ public:
     ~HTTP();
     bool is_request() const;
     bool is_response() const;
+    bool non_ascii() const;
     const std::string& request_method() const;
     const std::string& request_uri() const;
     const std::string& http_version() const;
@@ -68,6 +71,7 @@ private:
     uint8_t* end_ptr_;
     uint8_t* body_;
     unsigned int body_length_;
+    bool non_ascii_;
     void parse();
     void parse_headers();
     std::string next_string(char limitter = ' ');
