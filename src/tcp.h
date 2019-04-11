@@ -1,6 +1,6 @@
 /**
  * @file tcp.h
- * @author Daniel Uhricek (xuhric00@fit.vutbr.cz)
+ * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
  * @brief TCP protocol related.
  * @version 0.1
  * @date 2018-11-02

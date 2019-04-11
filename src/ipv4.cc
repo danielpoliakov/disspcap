@@ -1,6 +1,6 @@
 /**
  * @file ip.cc
- * @author Daniel Uhricek (xuhric00@fit.vutbr.cz)
+ * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
  * @brief IP protocol related.
  * @version 0.1
  * @date 2018-10-25

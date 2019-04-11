@@ -1,7 +1,7 @@
 /**
  * @file tcp.cc
- * @author Daniel Uhricek (xuhric00@fit.vutbr.cz)
- * @brief 
+ * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
+ * @brief TCP related.
  * @version 0.1
  * @date 2018-11-02
  * 

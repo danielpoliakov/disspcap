@@ -1,6 +1,6 @@
 /**
  * @file live_capture.cc
- * @author Daniel Uhricek (xuhric00@fit.vutbr.cz)
+ * @author Daniel Uhricek (danile.uhricek@gypri.cz)
  * @brief Live capture of packets.
  * @version 0.1
  * @date 2018-11-16

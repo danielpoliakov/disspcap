@@ -1,6 +1,6 @@
 /**
  * @file pcap.h
- * @author Daniel Uhricek (xuhric00@fit.vutbr.cz)
+ * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
  * @brief Pcap handler.
  * @version 0.1
  * @date 2018-10-22

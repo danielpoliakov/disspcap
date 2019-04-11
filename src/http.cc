@@ -12,6 +12,7 @@
  */
 
 #include "http.h"
+#include "common.h"
 
 #include <algorithm>
 #include <cctype>
@@ -340,22 +341,5 @@ void HTTP::parse_headers()
 
         this->headers_.insert(std::make_pair(key, value));
     }
-}
-
-/**
- * @brief Constructs hexadecimal representation string.
- * 
- * @param number Number to represent.
- * @return std::string String - e.g. "\x98".
- */
-std::string string_hexa(unsigned char number)
-{
-    const char hex_arr[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-
-    std::string hexa = "%";
-    hexa += hex_arr[number / 16];
-    hexa += hex_arr[number % 16];
-
-    return hexa;
 }
 }

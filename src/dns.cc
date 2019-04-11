@@ -1,6 +1,6 @@
 /**
  * @file dns.cc
- * @author Daniel Uhricek (xuhric00@fit.vutbr.cz)
+ * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
  * @brief DNS protocol related.
  * @version 0.1
  * @date 2018-11-16

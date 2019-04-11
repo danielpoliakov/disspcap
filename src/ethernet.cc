@@ -1,6 +1,6 @@
 /**
  * @file ethernet.cc
- * @author Daniel Uhricek (xuhric00@fit.vutbr.cz)
+ * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
  * @brief Ethernet protocol related.
  * @version 0.1
  * @date 2018-10-24

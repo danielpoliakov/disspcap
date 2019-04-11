@@ -1,6 +1,6 @@
 /**
  * @file ipv6.h
- * @author Daniel Uhricek (xuhric00fit.vutbr.cz)
+ * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
  * @brief IPv6 protocol related.
  * @version 0.1
  * @date 2018-11-03
