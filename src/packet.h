@@ -1,6 +1,6 @@
 /**
  * @file packet.h
- * @author Daniel Uhricek (xuhric00@fit.vutbr.cz)
+ * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
  * @brief Contains packet related representations. 
  * @version 0.1
  * @date 2018-10-23
@@ -22,6 +22,7 @@
 #include "ipv6.h"
 #include "irc.h"
 #include "tcp.h"
+#include "telnet.h"
 #include "udp.h"
 
 namespace disspcap {
@@ -43,6 +44,7 @@ public:
     const DNS* dns() const;
     const HTTP* http() const;
     const IRC* irc() const;
+    const Telnet* telnet() const;
     uint8_t* raw_data();
     uint8_t* payload();
 
@@ -59,6 +61,7 @@ private:
     DNS* dns_;
     HTTP* http_;
     IRC* irc_;
+    Telnet* telnet_;
     void parse();
 };
 }

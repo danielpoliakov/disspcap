@@ -1,6 +1,6 @@
 /**
  * @file packet.c
- * @author Daniel Uhricek (xuhric00@fit.vutbr.cz)
+ * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
  * @brief Contains packet related representations.
  * @version 0.1
  * @date 2018-10-23
@@ -31,6 +31,7 @@ Packet::Packet(uint8_t* data, unsigned int length)
     , dns_{ nullptr }
     , http_{ nullptr }
     , irc_{ nullptr }
+    , telnet_{ nullptr }
 {
     if (!data) {
         return;
@@ -69,6 +70,9 @@ Packet::~Packet()
 
     if (this->irc_)
         delete this->irc_;
+
+    if (this->telnet_)
+        delete this->telnet_;
 }
 
 /**
@@ -192,6 +196,16 @@ const IRC* Packet::irc() const
 }
 
 /**
+ * @brief Getter of Telnet data.
+ * 
+ * @return const Telnet* Telnet object.
+ */
+const Telnet* Packet::telnet() const
+{
+    return this->telnet_;
+}
+
+/**
  * @brief Parses raw data into protocol headers.
  */
 void Packet::parse()
@@ -262,6 +276,11 @@ void Packet::parse()
         if (this->tcp_->source_port() == 6667 || this->tcp_->destination_port() == 6667) {
             /* IRC */
             this->irc_ = new IRC(this->payload_, this->payload_length_);
+        }
+
+        if (this->tcp_->source_port() == 23 || this->tcp_->destination_port() == 23) {
+            /* Telnet */
+            this->telnet_ = new Telnet(this->payload_, this->payload_length_);
         }
     }
 }

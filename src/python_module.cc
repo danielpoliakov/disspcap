@@ -1,6 +1,6 @@
 /**
  * @file python_module.cpp
- * @author Daniel Uhricek (xuhric00@fit.vutbr.cz)
+ * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
  * @brief Interface to python using pybind11.
  * @version 0.1
  * @date 2018-10-30
@@ -21,6 +21,7 @@
 #include "packet.h"
 #include "pcap.h"
 #include "tcp.h"
+#include "telnet.h"
 #include "udp.h"
 
 using namespace disspcap;
@@ -40,6 +41,12 @@ PYBIND11_MODULE(disspcap, m)
     )doc";
 
     m.def("most_common_ip", &most_common_ip, "Returns most common ip in pcap.");
+
+    py::class_<Telnet>(m, "Telnet")
+        .def_property_readonly("is_command", &Telnet::is_command)
+        .def_property_readonly("is_data", &Telnet::is_data)
+        .def_property_readonly("is_empty", &Telnet::is_empty)
+        .def_property_readonly("data", &Telnet::data);
 
     py::class_<irc_message>(m, "irc_message")
         .def_readonly("prefix", &irc_message::prefix)
@@ -145,7 +152,8 @@ PYBIND11_MODULE(disspcap, m)
         .def_property_readonly("tcp", &Packet::tcp)
         .def_property_readonly("dns", &Packet::dns)
         .def_property_readonly("http", &Packet::http)
-        .def_property_readonly("irc", &Packet::irc);
+        .def_property_readonly("irc", &Packet::irc)
+        .def_property_readonly("telnet", &Packet::telnet);
 
     py::class_<Pcap>(m, "Pcap")
         .def(py::init())
