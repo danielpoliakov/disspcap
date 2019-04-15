@@ -12,6 +12,7 @@
  */
 
 #include "irc.h"
+#include "common.h"
 
 namespace disspcap {
 
@@ -129,6 +130,15 @@ std::string IRC::next_line()
 
     /* skip CRLF */
     this->ptr_ = p + 2;
+
+    /* check printables */
+    for (unsigned int i = 0; i < str.length(); ++i) {
+        unsigned char repr = static_cast<unsigned char>(str[i]);
+
+        if (!isprint(repr)) {
+            str.replace(i, 1, string_hexa(repr));
+        }
+    }
 
     return str;
 }
