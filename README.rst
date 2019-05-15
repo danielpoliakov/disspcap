@@ -33,6 +33,16 @@ C++ shared library
     $ make
 
 
+Running tests
+*************
+
+.. code:: bash
+
+    $ pip install pytest
+    $ pytest
+
+
 Docs
 ****
+
 `<https://disspcap.readthedocs.io>`_
