@@ -72,6 +72,18 @@ Packet
 
         :returns: :class:`DNS` object or :code:`nullptr`.
 
+    .. method:: const IRC* irc() const
+      
+        :returns: :class:`IRC` object or :code:`nullptr`.
+
+    .. method:: const Telnet* telnet() const
+
+        :returns: :class:`Telnet` object or :code:`nullptr`.
+
+    .. method:: const HTTP* http() const
+      
+        :returns: :class:`HTTP` object or :code:`nullptr`.
+
     .. method:: unsigned int length() const
 
         :returns: Packet length.
@@ -82,7 +94,7 @@ Packet
 
     .. method:: uint8_t* payload()
 
-        :returns: Payload data
+        :returns: Payload data.
 
 
     
@@ -209,3 +221,82 @@ DNS
     .. method:: const std::vector<std::string>& additionals() const
 
         :returns: Additional RRs. Vector of std::string formatted as: :code:`"google.com A 172.217.23.206"`
+
+
+IRC
+***
+
+.. class:: IRC
+
+    .. method:: const std::vector<struct irc_message> messages() const
+
+        :returns: Vector of IRC messages.
+
+
+Telnet
+******
+
+.. class:: Telnet
+
+    .. method:: bool is_command() const
+
+        :returns: :code:`true` if Telnet packet is a command.
+
+    .. method:: bool is_data() const
+
+        :returns: :code:`true` if Telnet packet contains message data.
+
+    .. method:: const std::string& data() const
+
+        :returns: Captured Telnet data.
+
+
+HTTP
+****
+
+.. class:: HTTP
+
+    .. method:: bool is_request() const
+
+        :returns: :code:`true` if packet is an HTTP request.
+
+    .. method:: bool is_response() const
+      
+        :returns: :code:`true` if packet is an HTTP response.
+
+    .. method:: bool non_ascii() const
+      
+        :returns: :code:`true` if packet contains non ascii symbols in the header.
+
+    .. method:: const std::string& request_method() const
+      
+        :returns: Request method type (e.g. :code:`"GET"`).
+
+    .. method:: const std::string& request_uri() const
+      
+        :returns: Request URI value.
+
+    .. method:: const std::string& http_version() const
+      
+        :returns: HTTP version (e.g. :code:`"HTTP/1.1"`).
+
+    .. method:: const std::string& response_phrase() const
+      
+        :returns: Response phrase value.
+
+    .. method:: const std::string& status_code() const
+      
+        :returns: String status code.
+
+    .. method:: std::map<std::string, std::string> headers() const
+      
+        :returns: Dictionary with HTTP headers values.
+
+    .. method:: uint8_t* body()
+      
+        :returns: HTTP body data.
+
+    .. method:: unsigned int body_length() const
+      
+        :returns: Length of the data.
+

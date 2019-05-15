@@ -48,6 +48,18 @@ Packet
 
         :class:`DNS` object or :code:`None`.
 
+    .. attribute:: irc
+        
+        :class:`IRC` object or :code:`None`.
+
+    .. attribute:: telnet
+        
+        :class:`Telnet` object or :code:`None`.
+
+    .. attribute:: http
+        
+        :class:`HTTP` object or :code:`None`.
+
     .. attribute:: payload_length
 
         Length of payload transport protocol.
@@ -182,3 +194,101 @@ DNS
 
         Additional RRs. List of strings formatted as:
         :code:`['google.com A 172.217.23.206', ...]`
+
+
+IRC
+***
+
+.. class:: IRC
+
+    .. attribute:: messages
+
+        List of IRC messages.
+
+.. class:: irc_message
+
+    .. attribute:: prefix
+        
+        Message prefix.
+        
+    .. attribute:: command
+
+        IRC command.
+
+    .. attribute:: params
+      
+        Command's parameters.
+
+    .. attribute:: trailing
+
+        Trailing parameter.
+
+
+Telnet
+******
+
+.. class:: Telnet
+
+    .. attribute:: is_command
+
+        :code:`True` if Telnet packet is a command.
+
+    .. attribute:: is_data
+        
+        :code:`True` if Telnet packet contains message data.
+
+    .. attribute:: data
+
+        Captured Telnet data.
+
+
+HTTP
+****
+
+.. class:: HTTP
+
+    .. attribute:: is_request
+
+        :code:`True` if packet is an HTTP request.
+
+    .. attribute:: is_response
+
+        :code:`True` if packet is an HTTP response.
+
+    .. attribute:: non_ascii
+
+        :code:`True` if packet contains non ascii symbols in HTTP header.
+
+    .. attribute:: request_method
+
+        Request method type (e.g. :code:`GET`).
+
+    .. attribute:: request_uri
+
+        Request URI value.
+
+    .. attribute:: version
+
+        HTTP version value (e.g. :code:`'HTTP/1.1'`)
+
+    .. attribute:: response_phrase
+
+        Reponse phrase value.
+
+    .. attribute:: status_code
+
+        String containing status code.
+
+    .. attribute:: headers
+
+        Dictionary with HTTP headers values.
+
+    .. attribute:: body
+
+        HTTP body data (:code:`bytes`).
+
+    .. attribute:: body_length
+
+        Length of the data.
+
+
