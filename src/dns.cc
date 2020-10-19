@@ -393,6 +393,8 @@ std::string DNS::parse_type(uint16_t type)
         return "DNSKEY";
     case 50:
         return "NSEC3";
+    case 255:
+        return "ANY";
     default:
         return "UNKNOWN";
     }
