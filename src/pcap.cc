@@ -6,7 +6,7 @@
  * @date 2018-10-22
  *
  * @copyright Copyright (c) 2018
- * 
+ *
  * Based on:
  * https://www.tcpdump.org/pcap.html
  */
@@ -19,7 +19,7 @@ namespace disspcap {
 
 /**
  * @brief Default construct a new Pcap:: Pcap object.
- * 
+ *
  * Constructs Pcap object without initialization.
  */
 Pcap::Pcap()
@@ -29,7 +29,7 @@ Pcap::Pcap()
 
 /**
  * @brief Construct a new Pcap:: Pcap object.
- * 
+ *
  * Constructs Pcap objects, opens pcap file and initializes data.
  */
 Pcap::Pcap(const std::string& filename)
@@ -40,7 +40,7 @@ Pcap::Pcap(const std::string& filename)
 
 /**
  * @brief Destroy the Pcap:: Pcap object.
- * 
+ *
  * Destructs Pcap objects, closes pcap file and deletes
  * allocated data.
  */
@@ -52,7 +52,7 @@ Pcap::~Pcap()
 
 /**
  * @brief Opens pcap.
- * 
+ *
  * @param filename Pcap file.
  */
 void Pcap::open_pcap(const std::string& filename)
@@ -67,13 +67,13 @@ void Pcap::open_pcap(const std::string& filename)
 
 /**
  * @brief Read next packet from a pcap file. Returns nullptr if no more packets.
- * 
+ *
  * @return Packet& Reference to next packet object.
  */
 std::unique_ptr<Packet> Pcap::next_packet()
 {
     uint8_t* data = const_cast<uint8_t*>(pcap_next(this->pcap_, this->last_header_));
-    auto packet   = std::unique_ptr<Packet>(new Packet(data, this->last_header_->len));
+    auto packet   = std::unique_ptr<Packet>(new Packet(data, this->last_header_->len, this->last_header_->ts));
     if (packet->raw_data() == nullptr) {
         return nullptr;
     }
@@ -82,7 +82,7 @@ std::unique_ptr<Packet> Pcap::next_packet()
 
 /**
  * @brief Returns length of last processed packet.
- * 
+ *
  * @return int Packet length.
  */
 int Pcap::last_packet_length() const

@@ -4,7 +4,7 @@
  * @brief Contains packet related representations.
  * @version 0.1
  * @date 2018-10-23
- * 
+ *
  * @copyright Copyright (c) 2018
  */
 
@@ -16,7 +16,7 @@ namespace disspcap {
 
 /**
  * @brief Construct a new Packet:: Packet object and runs parser.
- * 
+ *
  * @param length Packet length.
  */
 Packet::Packet(uint8_t* data, unsigned int length)
@@ -41,8 +41,36 @@ Packet::Packet(uint8_t* data, unsigned int length)
 }
 
 /**
+ * @brief Construct a new Packet:: Packet object and runs parser.
+ *
+ * @param length Packet length.
+ * @param ts Packet timestamp.
+ */
+Packet::Packet(uint8_t* data, unsigned int length, struct timeval ts)
+    : length_{ length }
+    , payload_length_{ length }
+    , raw_data_{ data }
+    , ts_{ std::chrono::seconds{ts.tv_sec} + std::chrono::microseconds{ts.tv_usec} }
+    , ethernet_{ nullptr }
+    , ipv4_{ nullptr }
+    , ipv6_{ nullptr }
+    , udp_{ nullptr }
+    , tcp_{ nullptr }
+    , dns_{ nullptr }
+    , http_{ nullptr }
+    , irc_{ nullptr }
+    , telnet_{ nullptr }
+{
+    if (!data) {
+        return;
+    }
+
+    this->parse();
+}
+
+/**
  * @brief Destroy the Packet:: Packet object.
- * 
+ *
  * Releases allocated memory for headers.
  */
 Packet::~Packet()
@@ -77,7 +105,7 @@ Packet::~Packet()
 
 /**
  * @brief Getter of packet length value.
- * 
+ *
  * @return int Packet length.
  */
 unsigned int Packet::length() const
@@ -87,7 +115,7 @@ unsigned int Packet::length() const
 
 /**
  * @brief Getter of payload length value.
- * 
+ *
  * @return int Payload length (see Packet::payload()).
  */
 unsigned int Packet::payload_length() const
@@ -107,7 +135,7 @@ uint8_t* Packet::payload()
 
 /**
  * @brief Getter of raw data pointer.
- * 
+ *
  * @return uint8_t* Pointer to raw data of packet.
  */
 uint8_t* Packet::raw_data()
@@ -117,7 +145,7 @@ uint8_t* Packet::raw_data()
 
 /**
  * @brief Getter of ethernet header.
- * 
+ *
  * @return const Ethernet* Ethernet header object.
  */
 const Ethernet* Packet::ethernet() const
@@ -127,7 +155,7 @@ const Ethernet* Packet::ethernet() const
 
 /**
  * @brief Getter of IPv4 header.
- * 
+ *
  * @return const IPv4* IPv4 header object.
  */
 const IPv4* Packet::ipv4() const
@@ -137,7 +165,7 @@ const IPv4* Packet::ipv4() const
 
 /**
  * @brief Getter of IPv6 header.
- * 
+ *
  * @return const IPv6* IPv6 header object.
  */
 const IPv6* Packet::ipv6() const
@@ -147,7 +175,7 @@ const IPv6* Packet::ipv6() const
 
 /**
  * @brief Getter of UDP header.
- * 
+ *
  * @return const UDP* UDP header object.
  */
 const UDP* Packet::udp() const
@@ -157,7 +185,7 @@ const UDP* Packet::udp() const
 
 /**
  * @brief Getter of TCP header.
- * 
+ *
  * @return const TCP* TCP header object.
  */
 const TCP* Packet::tcp() const
@@ -167,7 +195,7 @@ const TCP* Packet::tcp() const
 
 /**
  * @brief Getter of DNS data.
- * 
+ *
  * @return const DNS* DNS object.
  */
 const DNS* Packet::dns() const
@@ -177,7 +205,7 @@ const DNS* Packet::dns() const
 
 /**
  * @brief Getter of HTTP data.
- * 
+ *
  * @return const HTTP* HTTP object.
  */
 const HTTP* Packet::http() const
@@ -187,7 +215,7 @@ const HTTP* Packet::http() const
 
 /**
  * @brief Getter of IRC data.
- * 
+ *
  * @return const IRC* IRC object.
  */
 const IRC* Packet::irc() const
@@ -197,12 +225,17 @@ const IRC* Packet::irc() const
 
 /**
  * @brief Getter of Telnet data.
- * 
+ *
  * @return const Telnet* Telnet object.
  */
 const Telnet* Packet::telnet() const
 {
     return this->telnet_;
+}
+
+const std::chrono::system_clock::time_point* Packet::ts() const
+{
+    return &this->ts_;
 }
 
 /**

@@ -4,12 +4,13 @@
  * @brief Interface to python using pybind11.
  * @version 0.1
  * @date 2018-10-30
- * 
+ *
  * @copyright Copyright (c) 2018
  */
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/chrono.h>
 
 #include "common.h"
 #include "dns.h"
@@ -145,6 +146,7 @@ PYBIND11_MODULE(disspcap, m)
         });
 
     py::class_<Packet>(m, "Packet")
+        .def_property_readonly("ts", &Packet::ts)
         .def_property_readonly("ethernet", &Packet::ethernet)
         .def_property_readonly("ipv4", &Packet::ipv4)
         .def_property_readonly("ipv6", &Packet::ipv6)

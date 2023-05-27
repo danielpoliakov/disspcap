@@ -1,10 +1,10 @@
 /**
  * @file packet.h
  * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
- * @brief Contains packet related representations. 
+ * @brief Contains packet related representations.
  * @version 0.1
  * @date 2018-10-23
- * 
+ *
  * @copyright Copyright (c) 2018
  */
 
@@ -14,6 +14,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <chrono>
 
 #include "dns.h"
 #include "ethernet.h"
@@ -33,6 +34,7 @@ namespace disspcap {
 class Packet {
 public:
     Packet(uint8_t* data, unsigned int length);
+    Packet(uint8_t* data, unsigned int length, struct timeval ts);
     ~Packet();
     unsigned int length() const;
     unsigned int payload_length() const;
@@ -45,6 +47,7 @@ public:
     const HTTP* http() const;
     const IRC* irc() const;
     const Telnet* telnet() const;
+    const std::chrono::system_clock::time_point* ts() const;
     uint8_t* raw_data();
     uint8_t* payload();
 
@@ -52,6 +55,7 @@ private:
     unsigned int length_;
     unsigned int payload_length_;
     uint8_t* raw_data_;
+    std::chrono::system_clock::time_point ts_;
     uint8_t* payload_;
     Ethernet* ethernet_;
     IPv4* ipv4_;
