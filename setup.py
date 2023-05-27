@@ -22,12 +22,6 @@ class get_pybind_include(object):
     method can be invoked. """
 
     def __init__(self, user=False):
-        try:
-            import pybind11
-        except ImportError:
-            if subprocess.call([sys.executable, '-m', 'pip', 'install', 'pybind11']):
-                raise RuntimeError('pybind11 install failed.')
-
         self.user = user
 
     def __str__(self):
