@@ -1,10 +1,10 @@
 /**
  * @file packet.h
  * @author Daniel Uhricek (daniel.uhricek@gypri.cz)
- * @brief Contains packet related representations. 
+ * @brief Contains packet related representations.
  * @version 0.1
  * @date 2018-10-23
- * 
+ *
  * @copyright Copyright (c) 2018
  */
 

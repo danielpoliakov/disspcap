@@ -4,7 +4,7 @@
  * @brief Interface to python using pybind11.
  * @version 0.1
  * @date 2018-10-30
- * 
+ *
  * @copyright Copyright (c) 2018
  */
 
