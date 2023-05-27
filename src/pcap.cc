@@ -73,7 +73,7 @@ void Pcap::open_pcap(const std::string& filename)
 std::unique_ptr<Packet> Pcap::next_packet()
 {
     uint8_t* data = const_cast<uint8_t*>(pcap_next(this->pcap_, this->last_header_));
-    auto packet   = std::unique_ptr<Packet>(new Packet(data, this->last_header_->len));
+    auto packet   = std::unique_ptr<Packet>(new Packet(data, this->last_header_->len, this->last_header_->ts));
     if (packet->raw_data() == nullptr) {
         return nullptr;
     }

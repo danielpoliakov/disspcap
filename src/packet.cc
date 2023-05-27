@@ -41,6 +41,34 @@ Packet::Packet(uint8_t* data, unsigned int length)
 }
 
 /**
+ * @brief Construct a new Packet:: Packet object and runs parser.
+ *
+ * @param length Packet length.
+ * @param ts Packet timestamp.
+ */
+Packet::Packet(uint8_t* data, unsigned int length, struct timeval ts)
+    : length_{ length }
+    , payload_length_{ length }
+    , raw_data_{ data }
+    , ts_{ std::chrono::seconds{ts.tv_sec} + std::chrono::microseconds{ts.tv_usec} }
+    , ethernet_{ nullptr }
+    , ipv4_{ nullptr }
+    , ipv6_{ nullptr }
+    , udp_{ nullptr }
+    , tcp_{ nullptr }
+    , dns_{ nullptr }
+    , http_{ nullptr }
+    , irc_{ nullptr }
+    , telnet_{ nullptr }
+{
+    if (!data) {
+        return;
+    }
+
+    this->parse();
+}
+
+/**
  * @brief Destroy the Packet:: Packet object.
  *
  * Releases allocated memory for headers.
@@ -203,6 +231,11 @@ const IRC* Packet::irc() const
 const Telnet* Packet::telnet() const
 {
     return this->telnet_;
+}
+
+const std::chrono::system_clock::time_point* Packet::ts() const
+{
+    return &this->ts_;
 }
 
 /**
